@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useLanguage } from '../i18n/LanguageContext';
 
 export default function Navbar() {
+    const { lang, setLang, t } = useLanguage();
+
     // State interaksi
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -36,7 +39,7 @@ export default function Navbar() {
                     <img
                         id="logoImg"
                         src={isScrolled ? '/images/asabri-warna.png' : '/images/logo-light@2x.png'}
-                        alt="Logo Perusahaan"
+                        alt={t('nav.logoAlt')}
                         className="h-12 w-auto object-contain"
                     />
                 </a>
@@ -45,15 +48,15 @@ export default function Navbar() {
                 <ul className="hidden md:flex items-center space-x-10 font-medium absolute left-1/2 -translate-x-1/2">
                     {/* Beranda */}
                     <li>
-                        <a href="./home.jsx" className="hover:text-blue-500 transition">
-                            Beranda
+                        <a href="/" className="hover:text-blue-500 transition">
+                            {t('nav.home')}
                         </a>
                     </li>
 
                     {/* Tentang Kami */}
                     <li className="relative group">
                         <a href="#" className="hover:text-blue-500 transition">
-                            Tentang Kami
+                            {t('nav.about')}
                         </a>
 
                         {/* Dropdown Utama Desktop */}
@@ -65,7 +68,7 @@ export default function Navbar() {
                                     onClick={() => setIsDesktopProfilOpen(!isDesktopProfilOpen)}
                                     className="w-full flex mt-3 items-center justify-between px-3 py-3 text-sm text-gray-500 border-l-4 border-transparent hover:border-[#0057b8] hover:text-gray-800 transition"
                                 >
-                                    <span>Profil Perusahaan</span>
+                                    <span>{t('nav.companyProfile')}</span>
                                     <svg
                                         className={`w-4 h-4 transition-transform duration-300 ${isDesktopProfilOpen ? 'rotate-180' : ''
                                             }`}
@@ -91,25 +94,25 @@ export default function Navbar() {
                                         href="#"
                                         className="block pl-8 pr-3 py-2 text-sm text-gray-500 hover:text-gray-800 hover:border-l-4 hover:border-[#0057b8] transition"
                                     >
-                                        Sekilas Perusahaan
+                                        {t('nav.overview')}
                                     </a>
                                     <a
                                         href="#"
                                         className="block pl-8 pr-3 py-2 text-sm text-gray-500 hover:text-gray-800 hover:border-l-4 hover:border-[#0057b8] transition"
                                     >
-                                        Sejarah
+                                        {t('nav.history')}
                                     </a>
                                     <a
                                         href="#"
                                         className="block pl-8 pr-3 py-2 text-sm text-gray-500 hover:text-gray-800 hover:border-l-4 hover:border-[#0057b8] transition"
                                     >
-                                        Visi & Misi
+                                        {t('nav.visionMission')}
                                     </a>
                                     <a
                                         href="#"
                                         className="block pl-8 pr-3 py-2 text-sm text-gray-500 hover:text-gray-800 hover:border-l-4 hover:border-[#0057b8] transition"
                                     >
-                                        Makna Logo
+                                        {t('nav.logoMeaning')}
                                     </a>
                                 </div>
                             </div>
@@ -119,7 +122,7 @@ export default function Navbar() {
                                 href="#"
                                 className="block px-3 py-3 text-sm text-gray-500 border-l-4 border-transparent hover:border-[#0057b8] hover:text-gray-800 transition"
                             >
-                                Struktur Organisasi
+                                {t('nav.orgStructure')}
                             </a>
                         
                         </div>
@@ -128,7 +131,7 @@ export default function Navbar() {
                     {/* Berita */}
                     <li>
                         <a href="/berita.html" className="hover:text-blue-500 transition">
-                            Berita
+                            {t('nav.news')}
                         </a>
                     </li>
 
@@ -141,20 +144,43 @@ export default function Navbar() {
 
                     {/* Karir */}
                     <li>
-                        <a href="#" className="hover:text-blue-500 transition">
-                            Karir
+                        <a href="https://rekrutmen.asabri.co.id" className="hover:text-blue-500 transition">
+                            {t('nav.career')}
                         </a>
                     </li>
                 </ul>
             
 
         
+                {/* RIGHT SIDE: SWITCH BAHASA + HAMBURGER */}
+                <div className="flex items-center gap-4 md:mr-12">
+                    {/* SWITCH BAHASA DESKTOP */}
+                    <div className="hidden md:flex items-center gap-2 text-sm font-semibold">
+                        <button
+                            type="button"
+                            onClick={() => setLang('id')}
+                            aria-pressed={lang === 'id'}
+                            className={`transition ${lang === 'id' ? 'opacity-100 underline underline-offset-4' : 'opacity-60 hover:opacity-100'}`}
+                        >
+                            ID
+                        </button>
+                        <span className="opacity-40">|</span>
+                        <button
+                            type="button"
+                            onClick={() => setLang('en')}
+                            aria-pressed={lang === 'en'}
+                            className={`transition ${lang === 'en' ? 'opacity-100 underline underline-offset-4' : 'opacity-60 hover:opacity-100'}`}
+                        >
+                            EN
+                        </button>
+                    </div>
+
                 {/* HAMBURGER BUTTON MOBILE */}
                 <button
                     type="button"
                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                     className="md:hidden flex flex-col justify-center items-center gap-1.5 w-10 h-10 focus:outline-none"
-                    aria-label="Toggle Navigation"
+                    aria-label={t('nav.toggleNav')}
                 >
                     <span
                         className={`block w-7 h-0.5 bg-current transition-all duration-300 ease-in-out ${isMobileMenuOpen ? 'rotate-45 translate-y-2' : ''
@@ -169,6 +195,7 @@ export default function Navbar() {
                             }`}
                     ></span>
                 </button>
+                </div>
             </div>
 
             {/* MOBILE MENU PANEL */}
@@ -181,10 +208,10 @@ export default function Navbar() {
                 <div className="px-6 py-5">
                     {/* Beranda */}
                     <a
-                        href="/index.html"
+                        href="/"
                         className="block py-3 text-sm border-b border-gray-100 hover:text-[#0057b8]"
                     >
-                        Beranda
+                        {t('nav.home')}
                     </a>
 
                     {/* Tentang Kami Mobile */}
@@ -194,7 +221,7 @@ export default function Navbar() {
                             onClick={() => setIsMobileTentangOpen(!isMobileTentangOpen)}
                             className="w-full flex items-center justify-between py-3 text-sm border-b border-gray-100 hover:text-[#0057b8]"
                         >
-                            <span>Tentang Kami</span>
+                            <span>{t('nav.about')}</span>
                             <svg
                                 className={`w-4 h-4 transition-transform duration-300 ${isMobileTentangOpen ? 'rotate-180' : ''
                                     }`}
@@ -222,7 +249,7 @@ export default function Navbar() {
                                 onClick={() => setIsMobileProfilOpen(!isMobileProfilOpen)}
                                 className="w-full flex items-center justify-between py-3 pr-3 text-sm text-gray-600"
                             >
-                                <span>Profil Perusahaan</span>
+                                <span>{t('nav.companyProfile')}</span>
                                 <svg
                                     className={`w-4 h-4 transition-transform duration-300 ${isMobileProfilOpen ? 'rotate-180' : ''
                                         }`}
@@ -248,37 +275,31 @@ export default function Navbar() {
                                     href="#"
                                     className="block py-2 text-sm text-gray-500 hover:text-[#0057b8]"
                                 >
-                                    Sekilas Perusahaan
+                                    {t('nav.overview')}
                                 </a>
                                 <a
                                     href="#"
                                     className="block py-2 text-sm text-gray-500 hover:text-[#0057b8]"
                                 >
-                                    Sejarah
+                                    {t('nav.history')}
                                 </a>
                                 <a
                                     href="#"
                                     className="block py-2 text-sm text-gray-500 hover:text-[#0057b8]"
                                 >
-                                    Visi & Misi
+                                    {t('nav.visionMission')}
                                 </a>
                                 <a
                                     href="#"
                                     className="block py-2 text-sm text-gray-500 hover:text-[#0057b8]"
                                 >
-                                    Makna Logo
+                                    {t('nav.logoMeaning')}
                                 </a>
                             </div>
 
                             {/* Menu Lainnya Mobile */}
                             <a href="#" className="block py-3 text-sm text-gray-600">
-                                Struktur Organisasi
-                            </a>
-                            <a href="#" className="block py-3 text-sm text-gray-600">
-                                Dewan Direksi
-                            </a>
-                            <a href="#" className="block py-3 text-sm text-gray-600">
-                                Dewan Komisaris
+                                {t('nav.orgStructure')}
                             </a>
                         </div>
                     </div>
@@ -288,7 +309,7 @@ export default function Navbar() {
                         href="/berita.html"
                         className="block py-3 text-sm border-b border-gray-100 hover:text-[#0057b8]"
                     >
-                        Berita
+                        {t('nav.news')}
                     </a>
 
                     {/* FAQ */}
@@ -300,9 +321,31 @@ export default function Navbar() {
                     </a>
 
                     {/* Karir */}
-                    <a href="#" className="block py-3 text-sm hover:text-[#0057b8]">
-                        Karir
+                    <a href="https://rekrutmen.asabri.co.id" className="block py-3 text-sm hover:text-[#0057b8]">
+                        {t('nav.career')}
                     </a>
+
+                    {/* SWITCH BAHASA MOBILE */}
+                    <div className="flex items-center gap-4 pt-4 text-sm font-semibold">
+                        <button
+                            type="button"
+                            onClick={() => setLang('id')}
+                            aria-pressed={lang === 'id'}
+                            className={lang === 'id' ? 'text-[#0057b8] underline underline-offset-4' : 'text-gray-400'}
+                        >
+                            ID
+                        </button>
+                        <span className="text-gray-300">|</span>
+                        <button
+                            type="button"
+                            onClick={() => setLang('en')}
+                            aria-pressed={lang === 'en'}
+                            className={lang === 'en' ? 'text-[#0057b8] underline underline-offset-4' : 'text-gray-400'}
+                        >
+                            EN
+                        </button>
+                    </div>
+
                     
                 </div>
                 

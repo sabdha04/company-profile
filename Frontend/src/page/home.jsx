@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
 // 1. Impor Komponen Navbar dan Footer
 import Navbar from '../components/navbar';
 import Footer from '../components/footer';
+import { useLanguage } from '../i18n/LanguageContext';
 
 const images = [
     '/images/gambar2.png',
@@ -12,11 +13,80 @@ const images = [
     '/images/bg-3.jpg'
 ];
 
+const videos = [
+    { id: 1, titleKey: 'home.videos.v1', src: '/videos/video1.mp4', heightClass: 'h-[80vh]', top: 'top-20' },
+    { id: 2, titleKey: 'home.videos.v2', src: '/videos/video2.mp4', heightClass: 'inset-0' },
+    { id: 3, titleKey: 'home.videos.v3', src: '/videos/video3.mp4', heightClass: 'inset-0' },
+    // { id: 4, title: 'AJP 2026', src: '/videos/video4.mp4' },
+    // { id: 5, title: 'Bijak Berenergi', src: '/videos/video5.mp4' },
+];
+
+const logos = [
+    { name: 'Bank Syariah Indonesia', src: '/images/bsi1.png' },
+    { name: 'Bank BTN', src: '/images/btn1.png' },
+    { name: 'Bank BNI', src: '/images/bni1.png' },
+    { name: 'Bank BJB', src: '/images/bjb.png' },
+    { name: 'Bank Mantap', src: '/images/mantap.png' },
+    { name: 'Bank BRI', src: '/images/bri.png' },
+    { name: 'Pos Indonesia', src: '/images/pos.png' },
+    { name: 'Bank Jatim', src: '/images/jatim.png' },
+    { name: 'Bank Jateng', src: '/images/jateng.png' },
+    { name: 'Bws', src: '/images/bws.png' },
+    { name: 'KB', src: '/images/kb.png' },
+    { name: 'Bumi', src: '/images/bumi.png' },
+];
+
+function LogoCard({ name, initials, src }) {
+    return (
+        <div
+            // className="group flex h-24 items-center justify-center rounded-lg border border-slate-200 bg-white px-4 transition-colors duration-300 hover:border-slate-300"
+            className="flex h-24 items-center justify-center rounded-lg border border-slate-200 bg-white px-4"
+            title={name}
+        >
+            {/* Swap this img for the real logo asset. Falls back to initials
+          if the file isn't present yet, so the layout stays intact. */}
+            <img
+                src={src}
+                alt={name}
+                // className="max-h-12 w-auto object-contain grayscale opacity-70 transition duration-300 ease-out group-hover:grayscale-0 group-hover:opacity-100"
+                className="max-h-12 w-auto object-contain"
+                onError={(e) => {
+                    e.currentTarget.style.display = "none";
+                    e.currentTarget.nextSibling.style.display = "flex";
+                }}
+            />
+            <span
+                className="hidden h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-xs font-semibold text-slate-500"
+                aria-hidden="true"
+            >
+                {initials}
+            </span>
+        </div>
+    );
+}
+
+function LogoGroup({ label, items }) {
+    return (
+        <div>
+            <p className="mb-4 text-sm font-medium text-slate-500">{label}</p>
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
+                {items.map((item) => (
+                    <LogoCard key={item.name} {...item} />
+                ))}
+            </div>
+        </div>
+    );
+}
+
 export default function Home() {
+    const { t } = useLanguage();
+    const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+    const [videoProgress, setVideoProgress] = useState(0);
+    const videoRef = useRef(null);
     const [currentImgIndex, setCurrentImgIndex] = useState(0);
     const [fade, setFade] = useState(true);
     const [showScrollTop, setShowScrollTop] = useState(false); // State untuk kontrol tombol
-
+    const duplicatedLogos = [...logos, ...logos];
     // Effect untuk mendeteksi posisi scroll
     useEffect(() => {
         const handleScroll = () => {
@@ -30,6 +100,24 @@ export default function Home() {
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
+
+    // Fungsi untuk pindah ke video berikutnya secara otomatis saat video selesai
+    const handleVideoEnded = () => {
+        setCurrentVideoIndex((prevIndex) => (prevIndex + 1) % videos.length);
+    };
+
+    // Auto-play ulang video saat indeks video berubah
+    useEffect(() => {
+        setVideoProgress(0);
+
+        if (videoRef.current) {
+            videoRef.current.load();
+
+            videoRef.current
+                .play()
+                .catch((err) => console.log('Autoplay error:', err));
+        }
+    }, [currentVideoIndex]);
 
     // Fungsi untuk meluncur halus ke posisi paling atas
     const scrollToTop = () => {
@@ -84,9 +172,8 @@ export default function Home() {
     const features = [
         {
             id: 1,
-            title: "Perlindungan Sosial",
-            description:
-                "Memberikan jaminan finansial dan perlindungan dari masa aktif hingga masa purnabakti.",
+            title: t('home.features.protection.title'),
+            description: t('home.features.protection.desc'),
             icon: (
                 <svg
                     className="w-5 h-5"
@@ -98,16 +185,15 @@ export default function Home() {
                     <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2.5 2.5 0 012 2 2 2 0 002 2h1.5a2.5 2.5 0 002.5-2.5V11a2 2 0 00-2-2h-1c-.6 0-1-.4-1-1V6.5A2.5 2.5 0 0012 4h-1.5A2.5 2.5 0 008 6.5"
+                        d="M9 12.75L11.25 15 15 9.75M12 3.5l7 3.5v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V7l7-3.5z"
                     />
                 </svg>
             ),
         },
         {
             id: 2,
-            title: "Pengelola Manfaat",
-            description:
-                "Menyalurkan berbagai program perlindungan seperti Tabungan Hari Tua (THT), Jaminan Kecelakaan Kerja (JKK), Jaminan Kematian (JKM), dan Program Pensiun.",
+            title: t('home.features.benefit.title'),
+            description: t('home.features.benefit.desc'),
             icon: (
                 <svg
                     className="w-5 h-5"
@@ -126,9 +212,8 @@ export default function Home() {
         },
         {
             id: 3,
-            title: "Mitra Kesejahteraan",
-            description:
-                " Meningkatkan kesejahteraan peserta dan keluarga melalui layanan digital terintegrasi dan nilai-nilai kemanusiaan.",
+            title: t('home.features.partner.title'),
+            description: t('home.features.partner.desc'),
             icon: (
                 <svg
                     className="w-5 h-5"
@@ -153,49 +238,174 @@ export default function Home() {
         3: "lg:ml-20",
     };
 
+    const governmentStakeholders = [
+        { name: t('home.stakeholder.names.danantara'), initials: "DI", src: "/images/danantara1.png" },
+        { name: t('home.stakeholder.names.bumn'), initials: "BUMN", src: "/images/bumn.png" },
+        { name: t('home.stakeholder.names.kemenkeu'), initials: "KP", src: "/images/kemenkeu.png" },
+        { name: t('home.stakeholder.names.kemhan'), initials: "KEMHAN", src: "/images/kemhan.png" },
+        { name: t('home.stakeholder.names.ojk'), initials: "OJK", src: "/images/ojk.png" },
+    ];
+
+    const defenseStakeholders = [
+        { name: t('home.stakeholder.names.army'), initials: "AD", src: "/images/tni-ad.png" },
+        { name: t('home.stakeholder.names.navy'), initials: "AL", src: "/images/tni-al.png" },
+        { name: t('home.stakeholder.names.airforce'), initials: "AU", src: "/images/tni-au.png" },
+        { name: t('home.stakeholder.names.tni'), initials: "TNI", src: "/images/tni.png" },
+        { name: t('home.stakeholder.names.polri'), initials: "POLRI", src: "/images/polri.png" },
+    ];
+
+
+
     return (
         <div className="bg-gray-50 font-sans min-h-screen flex flex-col justify-between">
             <div>
                 <Navbar />
 
-                {/* Header / Hero Section */}
-                <header className="relative bg-[#0f4c81] h-auto min-h-[100vh] flex items-center px-6 md:px-12 text-white py-16 overflow-hidden">
-                    <div className="absolute inset-y-0 right-0 w-full md:w-1/2 z-0">
-                        <img
-                            id="carousel-img"
-                            src={images[currentImgIndex]}
-                            alt="Ilustrasi Slideshow"
-                            className={`w-full h-full object-cover object-center transition-opacity duration-300 ${fade ? 'opacity-100' : 'opacity-30'
-                                }`}
-                        />
-                        <div className="hidden md:block absolute inset-0 bg-gradient-to-r from-[#0f4c81] via-transparent to-transparent"></div>
-                        <div className="block md:hidden absolute inset-0 bg-[#0f4c81]/70"></div>
+                <header className="relative bg-black h-auto min-h-[100vh] flex items-center px-6 md:px-12 text-white py-16 overflow-hidden">
+
+                    {/* Background Video Container */}
+                    <div
+                        // className="absolute inset-0 z-0"
+                        // className="absolute top-20 left-0 right-0  h-[80vh] z-0">
+                        className={`absolute left-0 right-0 z-0 ${videos[currentVideoIndex].heightClass === 'inset-0'
+                            ? 'inset-0'
+                            : videos[currentVideoIndex].heightClass
+                            }`}
+                    >
+                        <video
+                            ref={videoRef}
+                            autoPlay
+                            muted
+                            playsInline
+                            onTimeUpdate={(e) => {
+                                const video = e.currentTarget;
+
+                                if (video.duration) {
+                                    const progress = (video.currentTime / video.duration) * 100;
+                                    setVideoProgress(progress);
+                                }
+                            }}
+                            onEnded={handleVideoEnded}
+                            className="w-full h-full object-cover object-center transition-opacity duration-700"
+                        >
+                            <source
+                                src={videos[currentVideoIndex].src}
+                                type="video/mp4"
+                            />
+                            {t('home.videoUnsupported')}
+                        </video>
+
                     </div>
 
-                    {/* Hero Text */}
-                    <div className="max-w-7xl mx-auto z-10 w-full mt-16">
-                        <div
-                            data-aos="zoom-in"
-                            data-aos-duration="1000"
-                            className="grid grid-cols-1 md:grid-cols-2 items-center gap-12"
-                        >
-                            <div className="text-center md:text-left md:pl-20">
-                                <span className="bg-white/20 text-xs uppercase tracking-widest font-semibold px-3 py-1 rounded-full">
-                                    Official Website
-                                </span>
-                                <h1 className="text-4xl md:text-4xl font-bold mt-4 leading-tight italic">
-                                    SAHABAT PERJUANGAN ANDA<br className="hidden md:block" />{' '}
-                                    <span className="text-[#cca600]">SEPANJANG MASA</span>
-                                </h1>
-                                <p className="mt-4 text-sm md:text-base text-blue-100 max-w-xl">
-                                    Pengumuman dan informasi resmi terkait ASABRI. Dapatkan update
-                                    terbaru tentang kegiatan, program, dan berita seputar kami di sini.
-                                </p>
-                            </div>
-                            <div className="hidden md:block"></div>
+                    {/* INDIKATOR BOTTOM TAB / PROGRESS BAR */}
+                    <div className="absolute bottom-6 left-0 right-0 z-20 px-4 md:px-16">
+
+                        {/* ================= MOBILE ================= */}
+                        <div className="flex md:hidden items-end gap-2 w-full">
+
+                            {videos.map((item, index) => {
+                                const isActive = index === currentVideoIndex;
+
+                                return (
+                                    <button
+                                        key={item.id}
+                                        onClick={() => setCurrentVideoIndex(index)}
+                                        className={`flex flex-col text-left focus:outline-none transition-all duration-300 ${isActive ? 'flex-[4]' : 'flex-1'
+                                            }`}
+                                    >
+
+                                        {/* Judul hanya video aktif */}
+                                        <div className="h-5 mb-2 flex items-center">
+                                            {isActive && (
+                                                <>
+                                                    <span className="w-2 h-2 rounded-full bg-red-600 mr-1.5" />
+
+                                                    <span className="text-xs font-medium text-white truncate">
+                                                        {t(item.titleKey)}
+                                                    </span>
+                                                </>
+                                            )}
+                                        </div>
+
+                                        {/* Progress */}
+                                        <div className="w-full h-[3px] bg-white/30 rounded-full overflow-hidden">
+                                            <div
+                                                className="h-full bg-red-600 transition-[width] duration-100"
+                                                style={{
+                                                    width: isActive
+                                                        ? `${videoProgress}%`
+                                                        : '0%',
+                                                }}
+                                            />
+                                        </div>
+
+                                    </button>
+                                );
+                            })}
+
                         </div>
+
+
+                        {/* ================= DESKTOP ================= */}
+                        <div className="hidden md:grid max-w-7xl mx-auto grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+
+                            {videos.map((item, index) => {
+                                const isActive = index === currentVideoIndex;
+
+                                return (
+                                    <button
+                                        key={item.id}
+                                        onClick={() => setCurrentVideoIndex(index)}
+                                        className="flex flex-col text-left group focus:outline-none"
+                                    >
+
+                                        {/* Titik + Judul Video */}
+                                        <div className="flex items-center space-x-2 mb-2">
+
+                                            {/* Lingkaran hanya untuk video aktif */}
+                                            {isActive && (
+                                                <span className="w-2.5 h-2.5 rounded-full bg-red-600 scale-125 transition-all duration-300 flex-shrink-0" />
+                                            )}
+
+                                            {/* Judul */}
+                                            <span
+                                                className={`text-xs md:text-sm font-medium truncate transition-colors duration-300 ${isActive
+                                                    ? 'text-white font-semibold'
+                                                    : 'text-gray-300 group-hover:text-white'
+                                                    }`}
+                                            >
+                                                {t(item.titleKey)}
+                                            </span>
+
+                                        </div>
+
+                                        {/* Progress Bar SEMUA VIDEO */}
+                                        <div className="w-full h-[2px] bg-white/30 rounded-full overflow-hidden">
+
+                                            <div
+                                                className={`h-full transition-[width] duration-100 ${isActive
+                                                    ? 'bg-red-600'
+                                                    : 'bg-transparent'
+                                                    }`}
+                                                style={{
+                                                    width: isActive
+                                                        ? `${videoProgress}%`
+                                                        : '0%',
+                                                }}
+                                            />
+
+                                        </div>
+
+                                    </button>
+                                );
+                            })}
+
+                        </div>
+
                     </div>
+
                 </header>
+
                 <div className="relative w-full bg-[#b81d1d] text-white rounded-b-3xl py-8 px-8 shadow-lg flex flex-col items-center justify-center space-y-6">
                     {/* Container Logo */}
                     <div className="flex items-center space-x-6">
@@ -215,7 +425,7 @@ export default function Home() {
 
                     {/* Teks / Slogan */}
                     <h1 data-aos="zoom-in" className="text-4xl md:text-4xl font-bold tracking-wide text-center">
-                        Melayani Sepenuh Hati
+                        {t('home.slogan')}
                     </h1>
                 </div>
 
@@ -231,20 +441,20 @@ export default function Home() {
                                 className="max-w-xl"
                             >
                                 <span className="mb-5 block text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">
-                                    PERAN ASABRI
+                                    {t('home.role.label')}
                                 </span>
 
                                 <h2 className="text-3xl font-extrabold leading-[1.15] text-[#0f4c81] sm:text-4xl md:text-5xl">
-                                    Penggerak Ekonomi Untuk Indonesia
+                                    {t('home.role.title')}
                                 </h2>
 
                                 <div className="mt-6 space-y-4">
                                     <p className="text-sm leading-7 text-gray-600 md:text-base">
-                                    Sebuah komitmen strategis ASABRI sebagai BUMN dalam memberikan perlindungan finansial dan mengelola asuransi sosial bagi prajurit TNI, anggota POLRI, serta ASN Kemhan/Polri guna mendukung stabilitas nasional.
+                                        {t('home.role.p1')}
                                     </p>
 
                                     <p className="text-xs leading-6 text-gray-500 md:text-sm">
-                                        Tidak hanya mengelola risiko finansial, ASABRI juga mengemban misi sosial. Melalui pengelolaan dana pensiun yang berkelanjutan serta program perlindungan komprehensif, ASABRI memberikan kepastian masa depan dan ketenangan bagi para penjaga kedaulatan bangsa beserta keluarganya.
+                                        {t('home.role.p2')}
                                     </p>
                                 </div>
                             </div>
@@ -324,6 +534,61 @@ export default function Home() {
                     </div>
                 </section>
 
+
+                <section className="bg-[] px-6 py-20 sm:px-20">
+                    <div className="mx-auto max-w-6xl">
+                        <div className="mb-14 flex items-start gap-4">
+                            <span className="mt-2 h-8 w-1 flex-shrink-0 rounded-full bg-[#0f4c81]" />
+                            <div>
+                                <h2 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
+                                    {t('home.stakeholder.title')}
+                                </h2>
+                                <p className="mt-2 max-w-md text-base text-slate-500">
+                                    {t('home.stakeholder.subtitle')}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="space-y-12">
+                            <LogoGroup label={t('home.stakeholder.groupGovernment')} items={governmentStakeholders} />
+                            <div className="h-px bg-slate-200" />
+                            <LogoGroup label={t('home.stakeholder.groupDefense')} items={defenseStakeholders} />
+                        </div>
+                    </div>
+                </section>
+
+
+                <section className="bg-[] py-12 overflow-hidden">
+                    <div className="max-w-7xl mx-auto px-6 mb-8 text-center">
+                        <h3 className="text-gray-400 text-sm font-semibold uppercase tracking-widest">
+                            {t('home.payment.title')}
+                        </h3>
+                    </div>
+
+                    {/* Container dengan efek Gradient Fade di Sisi Kiri & Kanan */}
+                    <div className="relative w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+
+                        {/* Track Bergerak */}
+                        <div className="flex w-max items-center space-x-12 animate-marquee hover:[animation-play-state:paused]">
+                            {duplicatedLogos.map((logo, index) => (
+                                <div
+                                    key={index}
+                                    className="flex items-center justify-center min-w-[160px] opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300"
+                                >
+                                    <img
+                                        src={logo.src}
+                                        alt={logo.name}
+                                        className="h-10 md:h-12 w-auto object-contain"
+                                    />
+                                </div>
+                            ))}
+                        </div>
+
+                    </div>
+                </section>
+
+
+
                 {/* Section Berita */}
                 <section className="py-16">
                     <div className="max-w-7xl mx-auto px-6 md:px-12 mb-12">
@@ -333,7 +598,7 @@ export default function Home() {
                                     data-aos="fade-up"
                                     className="text-3xl md:text-4xl font-extrabold text-[#0f4c81] tracking-wide"
                                 >
-                                    Berita
+                                    {t('home.news.title')}
                                 </h2>
                                 <div
                                     data-aos="fade-up"
@@ -347,7 +612,7 @@ export default function Home() {
                                 href="/berita.html"
                                 className="text-[#00a8ff] font-medium hover:text-blue-600 transition"
                             >
-                                Lihat semua berita &rarr;
+                                {t('home.news.seeAll')} &rarr;
                             </a>
                         </div>
                     </div>
@@ -362,16 +627,15 @@ export default function Home() {
                         >
                             <img
                                 src="/images/gambar1.jpg"
-                                alt="Berita 1"
+                                alt={t('home.news.items.n1.title')}
                                 className="w-full h-48 object-cover"
                             />
                             <div className="p-5">
                                 <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                                    Judul Berita 1
+                                    {t('home.news.items.n1.title')}
                                 </h3>
                                 <p className="text-gray-600 text-sm leading-relaxed">
-                                    Ringkasan berita 1. Lorem ipsum dolor sit amet, consectetur
-                                    adipiscing elit.
+                                    {t('home.news.items.n1.summary')}
                                 </p>
                             </div>
                         </div>
@@ -384,16 +648,15 @@ export default function Home() {
                         >
                             <img
                                 src="/images/gambar2-1.png"
-                                alt="Berita 2"
+                                alt={t('home.news.items.n2.title')}
                                 className="w-full h-48 object-cover"
                             />
                             <div className="p-5">
                                 <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                                    Judul Berita 2
+                                    {t('home.news.items.n2.title')}
                                 </h3>
                                 <p className="text-gray-600 text-sm leading-relaxed">
-                                    Ringkasan berita 2. Sed do eiusmod tempor incididunt ut labore
-                                    et dolore magna aliqua.
+                                    {t('home.news.items.n2.summary')}
                                 </p>
                             </div>
                         </div>
@@ -406,17 +669,15 @@ export default function Home() {
                         >
                             <img
                                 src="/images/gambar3.png"
-                                alt="Berita 3"
+                                alt={t('home.news.items.n3.title')}
                                 className="w-full h-48 object-cover"
                             />
                             <div className="p-5">
                                 <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                                    Judul Berita 3
+                                    {t('home.news.items.n3.title')}
                                 </h3>
                                 <p className="text-gray-600 text-sm leading-relaxed">
-                                    Ringkasan berita 3. Ut enim ad minim veniam, quis nostrud
-                                    exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                                    consequat.
+                                    {t('home.news.items.n3.summary')}
                                 </p>
                             </div>
                         </div>
@@ -428,7 +689,7 @@ export default function Home() {
             {/* TOMBOL BACK TO TOP */}
             <button
                 onClick={scrollToTop}
-                aria-label="Kembali ke atas"
+                aria-label={t('home.backToTop')}
                 className={`fixed bottom-6 right-6 z-50 p-3 bg-[#009bda] text-white rounded-full shadow-lg hover:bg-[#cca600] hover:scale-110 active:scale-95 transition-all duration-300 flex items-center justify-center ${showScrollTop
                     ? 'opacity-100 translate-y-0 pointer-events-auto'
                     : 'opacity-0 translate-y-4 pointer-events-none'

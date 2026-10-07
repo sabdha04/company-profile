@@ -1,9 +1,26 @@
 @import "tailwindcss";
 
+@theme {
+--animate-marquee: marquee 25s linear infinite;
+
+@keyframes marquee {
+    0% {
+    transform: translateX(0%);
+    }
+    100% {
+    transform: translateX(-50%);
+    }
+}
+}
+
 html,
 body {
-    overflow-x: hidden;
-    width: 100%;
-    max-width: 100%;
-    -webkit-text-size-adjust: 100%;
+overflow-x: hidden;
+width: 100%;
+max-width: 100%;
+-webkit-text-size-adjust: 100%;
+}
+
+html .footer{
+    overflow-y: hidden;
 }

@@ -9,6 +9,7 @@ lerna-debug.log*
 
 
 /public/images/*
+/public/videos/*
 node_modules
 dist
 dist-ssr

@@ -1,6 +1,9 @@
 import React from "react";
+import { useLanguage } from "../i18n/LanguageContext";
 
 export default function Footer() {
+    const { t } = useLanguage();
+
     return (
         <footer className="mt-16 bg-[#0f4c81] text-white">
             <div className="mx-auto w-full max-w-7xl px-6 py-12 md:px-12">
@@ -11,19 +14,19 @@ export default function Footer() {
                         <a href="/" className="inline-block">
                             <img
                                 src="/images/logo-light@2x.png"
-                                alt="Logo Perusahaan"
+                                alt={t('nav.logoAlt')}
                                 className="h-13 w-auto object-contain"
                             />
                         </a>
                         <p className="text-sm font-normal text-white/80 leading-relaxed max-w-[250px]">
-                            Sahabat Perjuangan Anda Sepanjang Masa.
+                            {t('footer.tagline')}
                         </p>
                     </div>
 
                     {/* Blok 2: Kontak */}
                     <div>
                         <h3 className="text-lg font-semibold tracking-wide mb-5">
-                            Kontak kami
+                            {t('footer.contactTitle')}
                         </h3>
                         <div className="space-y-4">
                             {/* Telepon */}
@@ -46,7 +49,7 @@ export default function Footer() {
                                 </div>
                                 <div>
                                     <p className="text-xs font-semibold text-white/50 uppercase tracking-wider">
-                                        Support Number
+                                        {t('footer.supportNumber')}
                                     </p>
                                     <a
                                         href="tel:1500043"
@@ -77,7 +80,7 @@ export default function Footer() {
                                 </div>
                                 <div>
                                     <p className="text-xs font-semibold text-white/50 uppercase tracking-wider">
-                                        Support Email
+                                        {t('footer.supportEmail')}
                                     </p>
                                     <a
                                         href="mailto:asabri@asabri.co.id"
@@ -114,12 +117,12 @@ export default function Footer() {
                                 </div>
                                 <div>
                                     <p className="text-xs font-semibold text-white/50 uppercase tracking-wider">
-                                        Address
+                                        {t('footer.address')}
                                     </p>
                                     <p className="text-sm text-white/90 leading-relaxed">
-                                        Jakarta Timur, DKI Jakarta,
+                                        {t('footer.addressLine1')}
                                         <br />
-                                        Indonesia, 13710
+                                        {t('footer.addressLine2')}
                                     </p>
                                 </div>
                             </div>
@@ -129,15 +132,15 @@ export default function Footer() {
                     {/* Blok 3: Links Navigation */}
                     <div className="md:pl-8">
                         <h3 className="text-lg font-semibold tracking-wide mb-5">
-                            Announcement
+                            {t('footer.linksTitle')}
                         </h3>
                         <ul className="space-y-3 text-sm text-white/80">
                             <li>
                                 <a
-                                    href="/index.html"
+                                    href="/"
                                     className="hover:text-white hover:underline transition"
                                 >
-                                    Beranda
+                                    {t('nav.home')}
                                 </a>
                             </li>
                             <li>
@@ -145,7 +148,7 @@ export default function Footer() {
                                     href="#"
                                     className="hover:text-white hover:underline transition"
                                 >
-                                    Tentang Kami
+                                    {t('nav.about')}
                                 </a>
                             </li>
                             <li>
@@ -153,7 +156,7 @@ export default function Footer() {
                                     href="/berita.html"
                                     className="hover:text-white hover:underline transition"
                                 >
-                                    Berita
+                                    {t('nav.news')}
                                 </a>
                             </li>
                             <li>
@@ -166,10 +169,10 @@ export default function Footer() {
                             </li>
                             <li>
                                 <a
-                                    href="/karir.html"
+                                    href="https://rekrutmen.asabri.co.id"
                                     className="hover:text-white hover:underline transition"
                                 >
-                                    Karir
+                                    {t('nav.career')}
                                 </a>
                             </li>
                         </ul>
@@ -178,7 +181,7 @@ export default function Footer() {
                     {/* Blok 4: Media Sosial */}
                     <div>
                         <h3 className="text-lg font-semibold tracking-wide mb-5">
-                            Media Sosial
+                            {t('footer.socialTitle')}
                         </h3>
                         <div className="flex flex-wrap gap-4">
                             <a
@@ -265,7 +268,7 @@ export default function Footer() {
 
                 {/* Hak Cipta */}
                 <div className="mt-6 text-center text-xs text-white/60 tracking-wide">
-                    © 2026, All Rights Reserved by Asabri.
+                    © {new Date().getFullYear()}, {t('footer.copyright')} <a href=""> / <u>{t('footer.privacy')}</u>  </a> <a href="" > / <u>{t('footer.fraudAlert')}</u> </a>
                 </div>
             </div>
         </footer>
