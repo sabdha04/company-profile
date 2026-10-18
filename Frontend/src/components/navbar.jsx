@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../i18n/LanguageContext';
+import { Link } from 'react-router-dom';
 
 export default function Navbar() {
     const { lang, setLang, t } = useLanguage();
@@ -28,17 +29,34 @@ export default function Navbar() {
     return (
         <nav
             id="navbar"
-            className={`fixed top-0 left-0 w-full z-50 py-3 px-6 md:px-12 transition-all duration-300 ease-in-out ${isScrolled
-                    ? 'bg-white/70 backdrop-blur-md text-[#0f4c81] shadow-md'
-                    : 'bg-transparent text-white'
+            className={`fixed top-0 left-0 w-full z-50 py-3 px-6 md:px-12 transition-all duration-300 ease-in-out ${isScrolled || isMobileMenuOpen
+                ? 'bg-white backdrop-blur-md text-[#0f4c81] shadow-md'
+                : 'bg-transparent text-white'
                 }`}
         >
-            <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <div className="relative z-50 max-w-7xl mx-auto flex items-center justify-between">
                 {/* LOGO */}
-                <a href="/" className="md:ml-12 pt-2">
+                {/* LOGO MOBILE: tetap */}
+                <a href="/" className="md:hidden pt-2">
                     <img
-                        id="logoImg"
-                        src={isScrolled ? '/images/asabri-warna.png' : '/images/logo-light@2x.png'}
+                        src={
+                            isMobileMenuOpen || isScrolled
+                                ? '/images/asabri-warna.png'
+                                : '/images/logo-light@2x.png'
+                        }
+                        alt={t('nav.logoAlt')}
+                        className="h-12 w-auto object-contain transition-all duration-300"
+                    />
+                </a>
+
+                {/* LOGO DESKTOP: berubah saat scroll */}
+                <a href="/" className="hidden md:block md:ml-12 pt-2">
+                    <img
+                        src={
+                            isScrolled
+                                ? '/images/asabri-warna.png'
+                                : '/images/logo-light@2x.png'
+                        }
                         alt={t('nav.logoAlt')}
                         className="h-12 w-auto object-contain"
                     />
@@ -96,12 +114,14 @@ export default function Navbar() {
                                     >
                                         {t('nav.overview')}
                                     </a>
-                                    <a
-                                        href="#"
+
+                                    <Link
+                                        to="/history"
                                         className="block pl-8 pr-3 py-2 text-sm text-gray-500 hover:text-gray-800 hover:border-l-4 hover:border-[#0057b8] transition"
                                     >
                                         {t('nav.history')}
-                                    </a>
+                                    </Link>
+
                                     <a
                                         href="#"
                                         className="block pl-8 pr-3 py-2 text-sm text-gray-500 hover:text-gray-800 hover:border-l-4 hover:border-[#0057b8] transition"
@@ -124,7 +144,7 @@ export default function Navbar() {
                             >
                                 {t('nav.orgStructure')}
                             </a>
-                        
+
                         </div>
                     </li>
 
@@ -149,9 +169,9 @@ export default function Navbar() {
                         </a>
                     </li>
                 </ul>
-            
 
-        
+
+
                 {/* RIGHT SIDE: SWITCH BAHASA + HAMBURGER */}
                 <div className="flex items-center gap-4 md:mr-12">
                     {/* SWITCH BAHASA DESKTOP */}
@@ -175,37 +195,38 @@ export default function Navbar() {
                         </button>
                     </div>
 
-                {/* HAMBURGER BUTTON MOBILE */}
-                <button
-                    type="button"
-                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                    className="md:hidden flex flex-col justify-center items-center gap-1.5 w-10 h-10 focus:outline-none"
-                    aria-label={t('nav.toggleNav')}
-                >
-                    <span
-                        className={`block w-7 h-0.5 bg-current transition-all duration-300 ease-in-out ${isMobileMenuOpen ? 'rotate-45 translate-y-2' : ''
-                            }`}
-                    ></span>
-                    <span
-                        className={`block w-7 h-0.5 bg-current transition-all duration-300 ease-in-out ${isMobileMenuOpen ? 'opacity-0' : ''
-                            }`}
-                    ></span>
-                    <span
-                        className={`block w-7 h-0.5 bg-current transition-all duration-300 ease-in-out ${isMobileMenuOpen ? '-rotate-45 -translate-y-2' : ''
-                            }`}
-                    ></span>
-                </button>
+                    {/* HAMBURGER BUTTON MOBILE */}
+                    <button
+                        type="button"
+                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                        className="md:hidden flex flex-col justify-center items-center gap-1.5 w-10 h-10 focus:outline-none"
+                        aria-label={t('nav.toggleNav')}
+                    >
+                        <span
+                            className={`block w-7 h-0.5 bg-current transition-all duration-300 ease-in-out ${isMobileMenuOpen ? 'rotate-45 translate-y-2' : ''
+                                }`}
+                        ></span>
+                        <span
+                            className={`block w-7 h-0.5 bg-current transition-all duration-300 ease-in-out ${isMobileMenuOpen ? 'opacity-0' : ''
+                                }`}
+                        ></span>
+                        <span
+                            className={`block w-7 h-0.5 bg-current transition-all duration-300 ease-in-out ${isMobileMenuOpen ? '-rotate-45 -translate-y-2' : ''
+                                }`}
+                        ></span>
+                    </button>
                 </div>
             </div>
 
+
             {/* MOBILE MENU PANEL */}
             <div
-                className={`md:hidden absolute top-full left-0 w-full bg-white text-gray-800 shadow-lg overflow-hidden transition-all duration-500 ease-in-out ${isMobileMenuOpen
-                        ? 'max-h-[1000px] opacity-100 translate-y-0 visible'
-                        : 'max-h-0 opacity-0 -translate-y-3 invisible'
+                className={`md:hidden fixed top-0 left-0 z-40 w-full h-dvh bg-white text-gray-800 shadow-lg overflow-y-auto overflow-x-hidden transition-all duration-500 ease-in-out ${isMobileMenuOpen
+                    ? 'opacity-100 translate-y-0 visible'
+                    : 'opacity-0 -translate-y-3 invisible pointer-events-none'
                     }`}
             >
-                <div className="px-6 py-5">
+                <div className="px-6 pt-24 pb-8">
                     {/* Beranda */}
                     <a
                         href="/"
@@ -277,12 +298,12 @@ export default function Navbar() {
                                 >
                                     {t('nav.overview')}
                                 </a>
-                                <a
-                                    href="#"
+                                <Link
+                                    to="/history"
                                     className="block py-2 text-sm text-gray-500 hover:text-[#0057b8]"
                                 >
                                     {t('nav.history')}
-                                </a>
+                                </Link>
                                 <a
                                     href="#"
                                     className="block py-2 text-sm text-gray-500 hover:text-[#0057b8]"
@@ -346,12 +367,12 @@ export default function Navbar() {
                         </button>
                     </div>
 
-                    
+
                 </div>
-                
+
             </div>
 
-            
+
         </nav>
     );
 }

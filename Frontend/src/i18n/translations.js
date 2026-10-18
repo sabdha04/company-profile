@@ -26,9 +26,41 @@ export const translations = {
       },
       role: {
         label: 'PERAN ASABRI',
-        title: 'Perlindungan Untuk Para Penjaga Bangsa',
-        p1: 'Sebuah komitmen strategis ASABRI sebagai BUMN dalam memberikan perlindungan finansial dan mengelola asuransi sosial bagi prajurit TNI, anggota POLRI, serta ASN Kemhan/Polri guna mendukung stabilitas nasional.',
+        title: 'Memberikan Perlindungan dan Kesejahteraan bagi Peserta',
+        p1: 'ASABRI sebagai salah satu BUMN berkomitmen memberikan perlindungan asuransi sosial dan pengelolaan manfaat bagi prajurit TNI, anggota POLRI, serta ASN di lingkungan Kementerian Pertahanan dan POLRI. Melalui pelayanan yang profesional, tata kelola yang baik, dan inovasi berkelanjutan, ASABRI hadir untuk mendukung kesejahteraan peserta beserta keluarganya.',
         p2: 'Tidak hanya mengelola risiko finansial, ASABRI juga mengemban misi sosial. Melalui pengelolaan dana pensiun yang berkelanjutan serta program perlindungan komprehensif, ASABRI memberikan kepastian masa depan dan ketenangan bagi para penjaga kedaulatan bangsa beserta keluarganya.',
+      },
+      quickServices: {
+        title: 'Butuh Bantuan? Layanan Cepat untuk Anda',
+        subtitle: 'Pilih layanan di bawah ini untuk mengurus kebutuhan secara online.',
+        items: {
+          serviceForm: {
+            title: 'Formulir Pelayanan',
+            desc: 'Ajukan perubahan data atau layanan polis.',
+          },
+          taxForm: {
+            title: 'Formulir Pajak',
+            desc: 'Unduh dan kirim dokumen pajak Anda.',
+          },
+          complaint: {
+            title: 'Keluhan Layanan',
+            desc: 'Sampaikan keluhan, kami tindak lanjuti.',
+          },
+          whistleblowing: {
+            title: 'Pengaduan Pelanggaran',
+            desc: 'Whistleblowing System. Identitas pelapor dijaga.',
+          },
+          onlineClaim: {
+            title: 'Klaim Online',
+            desc: 'Ajukan klaim tanpa perlu datang ke kantor.',
+          },
+        },
+      },
+      bar1:{
+        title:'KOMITMEN UNTUK MASA DEPAN',
+        desc:'Bersama Membangun Masa Depan yang Lebih Baik',
+        paragraph:'ASABRI terus berupaya meningkatkan kualitas layanan melalui transformasi digital, penguatan tata kelola perusahaan, serta inovasi yang berkelanjutan. Dengan mengedepankan profesionalisme dan integritas, ASABRI berkomitmen untuk terus berkembang, beradaptasi dengan perubahan, dan memberikan nilai tambah bagi peserta serta seluruh pemangku kepentingan.',
+        p1:'Selengkapnya',
       },
       features: {
         protection: {
@@ -128,10 +160,43 @@ export const translations = {
       },
       role: {
         label: "ASABRI'S ROLE",
-        title: 'Protection for the Guardians of the Nation',
-        p1: "ASABRI's strategic commitment as a state-owned enterprise (BUMN) to provide financial protection and manage social insurance for TNI soldiers, POLRI members, and civil servants of the Ministry of Defense and the Police, in support of national stability.",
+        title: 'Providing Protection and Well-Being for Participants',
+        p1: "As one of Indonesia’s state-owned enterprises (SOEs), ASABRI is committed to providing social insurance protection and managing benefits for members of the Indonesian National Armed Forces (TNI), the Indonesian National Police (POLRI), and civil servants within the Ministry of Defense and the Indonesian National Police. Through professional service, good governance, and continuous innovation, ASABRI is dedicated to supporting the well-being of its participants and their families.",
         p2: "Beyond managing financial risk, ASABRI also carries a social mission. Through sustainable pension fund management and comprehensive protection programs, ASABRI provides certainty for the future and peace of mind for the guardians of the nation's sovereignty and their families.",
       },
+      bar1:{
+        title:'A COMMITMENT TO THE FUTURE',
+        desc:'Building a Better Future Together',
+        paragraph:'ASABRI continues to strive to improve service quality through digital transformation, strengthening corporate governance, and ongoing innovation. By prioritizing professionalism and integrity, ASABRI is committed to continuing to grow, adapting to change, and providing added value to its participants and all stakeholders.',
+        p1:'Read more',
+      },
+      quickServices: {
+        title: 'Need Help? Quick Services for You',
+        subtitle: 'Choose a service below for manage your needs online.',
+        items: {
+          serviceForm: {
+            title: 'Service Form',
+            desc: 'Request data updates or policy services.',
+          },
+          taxForm: {
+            title: 'Tax Form',
+            desc: 'Download and submit your tax documents.',
+          },
+          complaint: {
+            title: 'Service Complaints',
+            desc: 'Submit your complaint and we will follow up.',
+          },
+          whistleblowing: {
+            title: 'Whistleblowing',
+            desc: 'Report violations with your identity protected.',
+          },
+          onlineClaim: {
+            title: 'Online Claims',
+            desc: 'Submit claims without visiting our office.',
+          },
+        },
+      },
+
       features: {
         protection: {
           title: 'Social Protection',

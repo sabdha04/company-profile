@@ -1,11 +1,19 @@
 import React, { useEffect, useState, useRef } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-
-// 1. Impor Komponen Navbar dan Footer
 import Navbar from '../components/navbar';
 import Footer from '../components/footer';
 import { useLanguage } from '../i18n/LanguageContext';
+import {
+    ClipboardList,
+    FileText,
+    MessageSquareWarning,
+    Megaphone,
+    ShieldCheck,
+} from "lucide-react";
+
+// 1. Impor Komponen Navbar dan Footer
+
 
 const images = [
     '/images/gambar2.png',
@@ -36,40 +44,64 @@ const logos = [
     { name: 'Bumi', src: '/images/bumi.png' },
 ];
 
+
 function LogoCard({ name, initials, src }) {
     return (
         <div
-            // className="group flex h-24 items-center justify-center rounded-lg border border-slate-200 bg-white px-4 transition-colors duration-300 hover:border-slate-300"
-            className="flex h-24 items-center justify-center rounded-lg border border-slate-200 bg-white px-4"
             title={name}
+            className="group relative flex h-full min-h-[180px] flex-col items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#0f4c81]/40 hover:shadow-[0_12px_30px_rgba(15,76,129,0.12)]"
         >
-            {/* Swap this img for the real logo asset. Falls back to initials
-          if the file isn't present yet, so the layout stays intact. */}
-            <img
-                src={src}
-                alt={name}
-                // className="max-h-12 w-auto object-contain grayscale opacity-70 transition duration-300 ease-out group-hover:grayscale-0 group-hover:opacity-100"
-                className="max-h-12 w-auto object-contain"
-                onError={(e) => {
-                    e.currentTarget.style.display = "none";
-                    e.currentTarget.nextSibling.style.display = "flex";
-                }}
-            />
-            <span
-                className="hidden h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-xs font-semibold text-slate-500"
-                aria-hidden="true"
-            >
-                {initials}
-            </span>
+            {/* Garis aksen di bagian atas */}
+            <div className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-[#0f4c81] transition-transform duration-300 group-hover:scale-x-100" />
+
+            {/* Area Logo */}
+            <div className="mb-4 flex h-20 w-full items-center justify-center rounded-xl bg-slate-50 p-3 transition-colors duration-300 group-hover:bg-blue-50">
+                <img
+                    src={src}
+                    alt={name}
+                    className="max-h-14 max-w-full object-contain transition-transform duration-300 group-hover:scale-105"
+                    onError={(e) => {
+                        e.currentTarget.style.display = "none";
+                        e.currentTarget.nextSibling.style.display = "flex";
+                    }}
+                />
+
+                {/* Fallback jika gambar gagal dimuat */}
+                <span
+                    className="hidden h-12 w-12 items-center justify-center rounded-xl bg-[#0f4c81] text-xs font-bold text-white"
+                    aria-hidden="true"
+                >
+                    {initials}
+                </span>
+            </div>
+
+            {/* Nama Institusi */}
+            <h3 className="text-sm font-semibold leading-snug text-slate-700 transition-colors duration-300 group-hover:text-[#0f4c81]">
+                {name}
+            </h3>
+
+            {/* Aksen bawah */}
+            <div className="mt-3 h-1 w-8 rounded-full bg-slate-200 transition-all duration-300 group-hover:w-14 group-hover:bg-[#cca600]" />
         </div>
     );
 }
 
+
 function LogoGroup({ label, items }) {
     return (
         <div>
-            <p className="mb-4 text-sm font-medium text-slate-500">{label}</p>
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
+            {/* Judul kelompok */}
+            <div className="mb-6 flex items-center gap-3">
+
+                <div>
+                    <h3 className="text-lg font-bold text-slate-800 md:text-xl">
+                        {label}
+                    </h3>
+                </div>
+            </div>
+
+            {/* Grid Card */}
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
                 {items.map((item) => (
                     <LogoCard key={item.name} {...item} />
                 ))}
@@ -99,6 +131,10 @@ export default function Home() {
 
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    useEffect(() => {
+        document.title = "Home | PT Asabri (Persero)";
     }, []);
 
     // Fungsi untuk pindah ke video berikutnya secara otomatis saat video selesai
@@ -255,6 +291,127 @@ export default function Home() {
     ];
 
 
+    const items = [
+        {
+            key: 'serviceForm',
+            href: '/formulir-pelayanan',
+            icon: ClipboardList,
+        },
+        {
+            key: 'taxForm',
+            href: '/formulir-pajak',
+            icon: FileText,
+        },
+        {
+            key: 'complaint',
+            href: '/keluhan-layanan',
+            icon: MessageSquareWarning,
+        },
+        {
+            key: 'whistleblowing',
+            href: '/whistleblowing',
+            icon: Megaphone,
+        },
+        {
+            key: 'onlineClaim',
+            href: '/klaim-online',
+            icon: ShieldCheck,
+        },
+    ];
+
+
+    const AsabriIllustration = () => {
+        return (
+            <div className="relative mx-auto flex w-full max-w-[430px] items-center justify-center">
+                <svg
+                    viewBox="0 0 400 520"
+                    className="h-auto w-full max-w-[390px]"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-label="Ilustrasi geometris ASABRI"
+                    role="img"
+                >
+                    {/* Elemen geometris bagian atas */}
+                    <path d="M175 28 L210 48 L175 68 Z" fill="#CCA600" />
+                    <path d="M95 76 L130 56 L165 76 L130 96 Z" fill="#0057B8" />
+                    <path d="M165 76 L235 36 L235 76 L165 116 Z" fill="#0F4C81" />
+                    <path d="M235 76 L270 56 L270 96 L235 116 Z" fill="#CCA600" />
+
+                    {/* Elemen vertikal */}
+                    <path d="M55 105 L85 122 L85 190 L55 173 Z" fill="#0057B8" />
+                    <path d="M130 116 L165 96 L165 136 L130 156 Z" fill="#CCA600" />
+                    <path d="M270 96 L305 116 L305 185 L270 165 Z" fill="#0F4C81" />
+                    <path d="M165 136 L200 156 L165 176 Z" fill="#0057B8" />
+                    <path d="M200 156 L235 136 L235 176 L200 196 Z" fill="#CCA600" />
+
+                    {/* Elemen geometris bagian tengah */}
+                    <path d="M85 190 L120 210 L85 230 L50 210 Z" fill="#0F4C81" />
+                    <path d="M120 210 L165 184 L165 224 L120 250 Z" fill="#0057B8" />
+                    <path d="M165 176 L200 196 L165 216 Z" fill="#CCA600" />
+                    <path d="M235 176 L270 196 L235 216 Z" fill="#0057B8" />
+                    <path d="M270 196 L305 176 L305 216 L270 236 Z" fill="#CCA600" />
+                    <path d="M200 236 L235 216 L270 236 L235 256 Z" fill="#0F4C81" />
+
+                    {/* Elemen geometris bagian bawah */}
+                    <path d="M50 250 L85 230 L85 270 L50 290 Z" fill="#CCA600" />
+                    <path d="M120 250 L155 270 L120 290 Z" fill="#0057B8" />
+                    <path d="M155 270 L190 250 L190 290 L155 310 Z" fill="#0F4C81" />
+                    <path d="M235 256 L270 276 L235 296 Z" fill="#0057B8" />
+                    <path d="M270 276 L305 256 L305 296 L270 316 Z" fill="#CCA600" />
+
+                    {/* Pola garis dekoratif */}
+                    <g stroke="#CCA600" strokeWidth="2.5">
+                        <path d="M96 144 L135 121" />
+                        <path d="M101 151 L140 128" />
+                        <path d="M106 158 L145 135" />
+                        <path d="M111 165 L150 142" />
+                        <path d="M116 172 L155 149" />
+                    </g>
+
+                    <g stroke="#0057B8" strokeWidth="2.5">
+                        <path d="M285 340 L320 319" />
+                        <path d="M285 350 L320 329" />
+                        <path d="M285 360 L320 339" />
+                        <path d="M285 370 L320 349" />
+                        <path d="M285 380 L320 359" />
+                        <path d="M285 390 L320 369" />
+                    </g>
+
+                    {/* Pola tambahan */}
+                    <path d="M50 325 L85 305 L120 325 L85 345 Z" fill="#0057B8" />
+                    <path d="M120 325 L155 345 L120 365 Z" fill="#CCA600" />
+                    <path d="M155 345 L190 325 L190 365 L155 385 Z" fill="#0057B8" />
+                    <path d="M190 365 L225 385 L190 405 Z" fill="#0F4C81" />
+                    <path d="M225 385 L260 365 L260 405 L225 425 Z" fill="#CCA600" />
+                    <path d="M260 405 L295 425 L260 445 Z" fill="#0057B8" />
+
+                    <path d="M50 390 L85 370 L85 410 L50 430 Z" fill="#0F4C81" />
+                    <path d="M85 410 L120 430 L85 450 Z" fill="#CCA600" />
+                    <path d="M120 430 L155 410 L155 450 L120 470 Z" fill="#0057B8" />
+                    <path d="M155 450 L190 470 L155 490 Z" fill="#CCA600" />
+                    <path d="M225 445 L260 465 L225 485 Z" fill="#0F4C81" />
+
+                    {/* Identitas vertikal */}
+                    <text
+                        x="220"
+                        y="120"
+                        transform="rotate(-90 220 120)"
+                        fill="#cca600"
+                        fontSize="12"
+                        fontWeight="800"
+                        letterSpacing="2"
+                    >
+                        ASABRI
+                    </text>
+                </svg>
+
+                {/* Aksen lingkaran */}
+                <div className="absolute -right-1 top-[28%] h-3 w-3 rounded-full bg-[#CCA600]" />
+                <div className="absolute -left-2 bottom-[23%] h-4 w-4 rounded-full bg-[#0057B8]" />
+            </div>
+
+        );
+    };
 
     return (
         <div className="bg-gray-50 font-sans min-h-screen flex flex-col justify-between">
@@ -429,6 +586,66 @@ export default function Home() {
                     </h1>
                 </div>
 
+
+
+                <section className="w-full overflow-hidden bg-white px-6 py-16 md:px-12 md:py-24">
+                    <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 md:grid-cols-2 md:gap-16 lg:gap-24">
+
+                        {/* Kolom kiri: Ilustrasi */}
+                        <div className="flex items-center justify-center">
+                            <AsabriIllustration />
+                        </div>
+
+                        {/* Kolom kanan: Konten */}
+                        <div className="flex flex-col items-start">
+                            <span data-aos="fade-up"
+                                data-aos-delay="500" className="mb-3 text-xs font-semibold uppercase tracking-wide text-[#0057B8] md:text-sm">
+                                {t('home.bar1.title')}
+                            </span>
+
+                            <h2 data-aos="fade-up"
+                                data-aos-delay="600" className="max-w-2xl text-2xl font-semibold leading-tight tracking-tight text-gray-950 md:text-3xl lg:text-[32px]">
+                                {t('home.bar1.desc')}
+                            </h2>
+
+                            <p data-aos="fade-up"
+                                data-aos-delay="700" className="mt-5 text-justify text-sm leading-7 text-slate-600 md:text-base md:leading-8">
+                                {t('home.bar1.paragraph')}
+                            </p>
+
+                            <a
+                                href="/tentang-kami"
+                                data-aos="fade-up"
+                                data-aos-delay="800"
+                                className="group mt-8 inline-flex items-center gap-4 rounded-full border border-slate-400 px-7 py-3 text-sm font-medium text-slate-700 transition-all duration-300 hover:border-[#0057B8] hover:bg-[#0057B8] hover:text-white">
+                                <span>{t('home.bar1.p1')}</span>
+
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="20"
+                                    height="20"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="1.8"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    className="transition-transform duration-300 group-hover:translate-x-1"
+                                    aria-hidden="true"
+                                >
+                                    <path d="M5 12h14" />
+                                    <path d="m12 5 7 7-7 7" />
+                                </svg>
+                            </a>
+                        </div>
+
+                    </div>
+                </section>
+
+
+
+
+
                 <section className="relative overflow-hidden bg-gray-50/50 py-20 md:py-24">
                     <div className="mx-auto max-w-7xl px-6 md:px-12">
                         <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2 lg:gap-20">
@@ -449,11 +666,11 @@ export default function Home() {
                                 </h2>
 
                                 <div className="mt-6 space-y-4">
-                                    <p className="text-sm leading-7 text-gray-600 md:text-base">
+                                    <p className="text-justify text-sm leading-7 text-gray-600 md:text-base">
                                         {t('home.role.p1')}
                                     </p>
 
-                                    <p className="text-xs leading-6 text-gray-500 md:text-sm">
+                                    <p className="text-justify text-xs leading-6 text-gray-500 md:text-sm">
                                         {t('home.role.p2')}
                                     </p>
                                 </div>
@@ -535,27 +752,90 @@ export default function Home() {
                 </section>
 
 
-                <section className="bg-[] px-6 py-20 sm:px-20">
-                    <div className="mx-auto max-w-6xl">
-                        <div className="mb-14 flex items-start gap-4">
-                            <span className="mt-2 h-8 w-1 flex-shrink-0 rounded-full bg-[#0f4c81]" />
+
+                <section
+                    aria-label={t('home.quickServices.title')}
+                    className="bg-slate-200 py-8"
+                >
+                    {/* Judul Section */}
+                    <div className="mx-auto mb-6 max-w-7xl px-6 md:px-12">
+                        <h2 className="text-xl font-bold text-[#1b2a5c] sm:text-2xl">
+                            {t('home.quickServices.title')}
+                        </h2>
+
+                        <p className="mt-1 text-sm text-slate-600">
+                            {t('home.quickServices.subtitle')}
+                        </p>
+                    </div>
+
+                    {/* Daftar Layanan */}
+                    <ul className="mx-auto grid max-w-7xl grid-cols-1 gap-4 px-6 sm:grid-cols-2 md:px-12 lg:grid-cols-3 xl:grid-cols-5">
+                        {items.map(({ key, href, icon: Icon }) => (
+                            <li key={key}>
+                                <a
+                                    href={href}
+                                    className="group flex h-full items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 text-[#1b2a5c] transition duration-200 hover:-translate-y-0.5 hover:border-amber-400 hover:shadow-lg hover:shadow-slate-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+                                >
+                                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-500/15 text-amber-700 transition group-hover:bg-amber-500 group-hover:text-[#1b2a5c]">
+                                        <Icon
+                                            className="h-5 w-5"
+                                            strokeWidth={1.75}
+                                            aria-hidden="true"
+                                        />
+                                    </span>
+
+                                    <div className="min-w-0">
+                                        <h3 className="text-sm font-semibold leading-snug">
+                                            {t(`home.quickServices.items.${key}.title`)}
+                                        </h3>
+
+                                        <p className="mt-0.5 text-xs leading-relaxed text-slate-600">
+                                            {t(`home.quickServices.items.${key}.desc`)}
+                                        </p>
+                                    </div>
+                                </a>
+                            </li>
+                        ))}
+                    </ul>
+                </section>
+
+
+                <section className="relative overflow-hidden bg-gradient-to-b from-white to-slate-50  py-16 sm:px-8  md:py-20">
+                    <div className="mx-auto max-w-7xl px-6 md:px-12">
+
+                        <div className="mb-12 flex items-start gap-4">
+                            <span className="mt-1 h-12 w-1.5 shrink-0 rounded-full bg-[#0f4c81]" />
+
                             <div>
-                                <h2 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
+
+                                <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
                                     {t('home.stakeholder.title')}
                                 </h2>
-                                <p className="mt-2 max-w-md text-base text-slate-500">
+
+                                <p className="mt-3 max-w-xl text-sm leading-7 text-slate-500 sm:text-base">
                                     {t('home.stakeholder.subtitle')}
                                 </p>
                             </div>
                         </div>
 
+                        {/* Daftar Stakeholder */}
                         <div className="space-y-12">
-                            <LogoGroup label={t('home.stakeholder.groupGovernment')} items={governmentStakeholders} />
-                            <div className="h-px bg-slate-200" />
-                            <LogoGroup label={t('home.stakeholder.groupDefense')} items={defenseStakeholders} />
+                            <LogoGroup
+                                label={t('home.stakeholder.groupGovernment')}
+                                items={governmentStakeholders}
+                            />
+
+                            <div className="h-px bg-gradient-to-r from-[#0f4c81]/30 via-slate-200 to-transparent" />
+
+                            <LogoGroup
+                                label={t('home.stakeholder.groupDefense')}
+                                items={defenseStakeholders}
+                            />
                         </div>
+
                     </div>
                 </section>
+
 
 
                 <section className="bg-[] py-12 overflow-hidden">
